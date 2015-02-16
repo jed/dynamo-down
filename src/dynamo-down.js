@@ -4,6 +4,7 @@ import xtend from "xtend"
 const serialize = function(value) {
   if (value == null || value === "") return {NULL: true}
 
+  const type = value.constructor.name
   const reduce = function(value) {
     return Object.keys(value).reduce(function(acc, key) {
       acc[key] = serialize(value[key])
@@ -11,7 +12,7 @@ const serialize = function(value) {
     }, {})
   }
 
-  switch (value.constructor.name) {
+  switch (type) {
     case "String"  : return {S: value}
     case "Buffer"  : return {B: value.toString("base64")}
     case "Boolean" : return {BOOL: value}
@@ -248,10 +249,16 @@ class DynamoDOWN extends AbstractLevelDOWN {
 
     const params = {RequestItems: {}}
 
-    const loop = (err) => {
+    const loop = (err, data) => {
       if (err) return cb(err)
 
-      const reqs = ops.splice(0, 25)
+      const reqs = []
+
+      if (data && data.UnprocessedItems && data.UnprocessedItems[TableName]) {
+        reqs.push(...data.UnprocessedItems[TableName])
+      }
+
+      reqs.push(...ops.splice(0, 25 - reqs.length))
 
       if (reqs.length === 0) return cb()
 
