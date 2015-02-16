@@ -21,33 +21,25 @@ Example
 
 ```javascript
 var aws = require("aws-sdk")
-var DynamoDOWN = require("dynamo-down")
+var DynamoDOWN = require("./")
 var levelup = require("levelup")
 
 var dynamo = new aws.DynamoDB({region: "us-east-1"})
 var dynamoDown = DynamoDOWN(dynamo)
-var db = levelup("my-table/nyc-js-meetups", {db: dynamoDown})
+var options = {db: dynamoDown, valueEncoding: "json"}
+var db = levelup("my-table/nyc-js-meetups", options)
 
-db.put("brooklyn_js"     , {name: "BrooklynJS"  })
 db.put("queens_js"       , {name: "QueensJS"    })
-db.put("manhattan_js"    , {name: "ManhattanJS" })
 db.put("jerseyscriptusa" , {name: "JerseyScript"})
+db.put("manhattan_js"    , {name: "ManhattanJS" })
+db.put("brooklyn_js"     , {name: "BrooklynJS"  })
 
-db.createReadStream()
-   .on("data", function (data) {
-      if (typeof data.value !== "undefined") {
-         console.log(data.key, "=", data.value)
-      }
-   })
-   .on("error", function (err) {
-      console.log("Oh my!", err)
-   })
-   .on("close", function () {
-      console.log("Stream closed")
-   })
-   .on("end", function () {
-     console.log("Stream ended")
-   })
+db.createReadStream().on("data", console.log)
+
+// { key: 'brooklyn_js', value: { name: 'BrooklynJS' } }
+// { key: 'jerseyscriptusa', value: { name: 'JerseyScript' } }
+// { key: 'manhattan_js', value: { name: 'ManhattanJS' } }
+// { key: 'queens_js', value: { name: 'QueensJS' } }
 ```
 
 API
