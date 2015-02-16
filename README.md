@@ -67,7 +67,7 @@ This function leaves the backing DynamoDB table in place, but deletes all items 
 
 [aws-sdk]: http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/
 [abstract-leveldown]: https://github.com/rvagg/abstract-leveldown
-[levelup]: https://github.com/rvagg/levelup
+[levelup]: https://github.com/rvagg/node-levelup
 [DynamoDB]: http://aws.amazon.com/dynamodb/
 [leveldown]: https://github.com/rvagg/node-leveldown/
 [io.js]: https://iojs.org
