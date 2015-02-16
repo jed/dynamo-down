@@ -1,6 +1,6 @@
 {
   "name": "dynamo-down",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A leveldown API implementation on AWS DynamoDB",
   "author": "Jed Schmidt (http://jed.is)",
   "license": "MIT",
