@@ -19,7 +19,6 @@ const serialize = function(value) {
     case "Number"  : return {N: String(value)}
     case "Array"   : return {L: value.map(serialize)}
     case "Object"  : return {M: reduce(value)}
-    // TODO: Support sets
 
     default        : throw new Error(`Cannot serialize ${type}`)
   }
@@ -43,7 +42,6 @@ const parse = function(val) {
     case "N"    : return parseFloat(value, 10)
     case "L"    : return value.map(parse)
     case "M"    : return reduce(value)
-    // TODO: Support sets
 
     default     : throw new Error(`Cannot parse ${type}.`)
   }
