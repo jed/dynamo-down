@@ -6,7 +6,7 @@ import async from "async"
 import aws from "aws-sdk"
 import levelup from "levelup"
 import concat from "concat-stream"
-import DynamoDOWN from "./dynamodown"
+import DynamoDOWN from "./dynamo-down"
 
 let server
 let dynamo

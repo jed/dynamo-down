@@ -2,9 +2,8 @@ import {AbstractLevelDOWN, AbstractIterator} from "abstract-leveldown"
 import xtend from "xtend"
 
 const serialize = function(value) {
-  if (value === "") value = {NULL: true}
+  if (value == null || value === "") return {NULL: true}
 
-  const type = toString.call(value).slice(8, -1)
   const reduce = function(value) {
     return Object.keys(value).reduce(function(acc, key) {
       acc[key] = serialize(value[key])
@@ -12,8 +11,7 @@ const serialize = function(value) {
     }, {})
   }
 
-  switch (type) {
-    case "Null"    : return {NULL: true}
+  switch (value.constructor.name) {
     case "String"  : return {S: value}
     case "Buffer"  : return {B: value.toString("base64")}
     case "Boolean" : return {BOOL: value}

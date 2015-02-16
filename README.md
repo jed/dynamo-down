@@ -1,11 +1,11 @@
-dynamodown
+dynamo-down
 ==========
 
 A DynamoDB implementation of leveldown.
 
 This library uses [abstract-leveldown][] to turn a subsection of a DynamoDB table into a leveldown-compatible store for use with [levelup][].
 
-Because the architecture of DynamoDB does not allow for sorted table scans, dynamodown is implemented using table queries on a given hash key. This means that one DynamoDB table can host many levelup stores, but cannot iterate across them.
+Because the architecture of DynamoDB does not allow for sorted table scans, dynamo-down is implemented using table queries on a given hash key. This means that one DynamoDB table can host many levelup stores, but cannot iterate across them.
 
 Keep in mind that there are some differences between LevelDB and DynamoDB. For example, unlike LevelDB, DynamoDB does not guarantee batch write atomicity, and does not snapshot reads.
 
