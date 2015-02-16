@@ -21,7 +21,7 @@ Example
 
 ```javascript
 var aws = require("aws-sdk")
-var DynamoDOWN = require("./")
+var DynamoDOWN = require("dynamo-down")
 var levelup = require("levelup")
 
 var dynamo = new aws.DynamoDB({region: "us-east-1"})
