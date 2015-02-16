@@ -1,5 +1,4 @@
 import {AbstractLevelDOWN, AbstractIterator} from "abstract-leveldown"
-import xtend from "xtend"
 
 const serialize = function(value) {
   if (value == null || value === "") return {NULL: true}
@@ -115,7 +114,7 @@ class DynamoIterator extends AbstractIterator {
 
     if (item) {
       // make sure not excluded from gt/lt key conditions
-      setImmediate(cb, null, item.key, item.value)
+      setImmediate(cb, null, item.key, JSON.stringify(item.value))
       delete this._items[this._cursor]
       this._cursor++
       return
@@ -156,7 +155,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
   }
 
   _toItem({key, value}) {
-    const item = xtend(value)
+    const item = value ? JSON.parse(value) : {}
 
     item[this._schema.hash.name] = this._schema.hash.value
     item[this._schema.range.name] = key
@@ -213,8 +212,6 @@ class DynamoDOWN extends AbstractLevelDOWN {
   _put(key, value, options, cb) {
     const TableName = this._table.name
     const {valueEncoding} = options
-
-    value = valueEncoding === "json" ? JSON.parse(value) : {value}
 
     const Item = this._toItem({key, value})
     const params = {TableName, Item}

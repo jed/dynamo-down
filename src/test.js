@@ -78,7 +78,10 @@ const createTable = function(cb) {
     if (err) throw err
 
     dynamoDown = DynamoDOWN(dynamo)
-    db = levelup("test/httpStatusCode", {db: dynamoDown})
+    db = levelup("test/httpStatusCode", {
+      db: dynamoDown,
+      valueEncoding: "json"
+    })
 
     setTimeout(cb, 1000)
   }
