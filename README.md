@@ -1,5 +1,7 @@
 dynamo-down
-==========
+===========
+
+[![Build Status](https://travis-ci.org/jed/dynamo-down.svg?branch=master)](https://travis-ci.org/jed/dynamo-down)
 
 A DynamoDB implementation of leveldown.
 
