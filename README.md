@@ -26,12 +26,12 @@ var levelup = require("levelup")
 
 var dynamo = new aws.DynamoDB({region: "us-east-1"})
 var dynamoDown = DynamoDOWN(dynamo)
-var db = levelup("table-name/hash-name", {db: dynamoDown})
+var db = levelup("my-table/nyc-js-meetups", {db: dynamoDown})
 
-db.put("name", "Yuri Irsenovich Kim")
-db.put("dob", "16 February 1941")
-db.put("spouse", "Kim Young-sook")
-db.put("occupation", "Clown")
+db.put("brooklyn_js"     , {name: "BrooklynJS"  })
+db.put("queens_js"       , {name: "QueensJS"    })
+db.put("manhattan_js"    , {name: "ManhattanJS" })
+db.put("jerseyscriptusa" , {name: "JerseyScript"})
 
 db.createReadStream()
    .on("data", function (data) {
