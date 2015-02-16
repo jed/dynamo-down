@@ -7,7 +7,7 @@ This library uses [abstract-leveldown][] to turn a subsection of a DynamoDB tabl
 
 Because the architecture of DynamoDB does not allow for sorted table scans, dynamodown is implemented using table queries on a given hash key. This means that one DynamoDB table can host many levelup stores, but cannot iterate across them.
 
-Keep in mind that there are some differences between LevelDB and DynamoDB. For example unlike LevelDB, DynamoDB does not guarantee batch write atomicity, and does not snapshot reads.
+Keep in mind that there are some differences between LevelDB and DynamoDB. For example, unlike LevelDB, DynamoDB does not guarantee batch write atomicity, and does not snapshot reads.
 
 Example
 -------
@@ -52,7 +52,7 @@ API
 
 ### db = levelup("mytable/myhash", {db: dynamoDown})
 
-When instantiating a levelup database, the location passed as the first argument represents the name of the DynamoDB table and the hash key within the table, separated by a `/`. The table must already exist, and have a schema with both hash and range keys.
+When instantiating a levelup store, the location passed as the first argument represents the name of the DynamoDB table and the hash key within the table, separated by a `/`. The table must already exist, and have a schema with both hash and range keys.
 
 [aws-sdk]: http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/
 [abstract-leveldown]: https://github.com/rvagg/abstract-leveldown
