@@ -9,12 +9,17 @@ Because the architecture of DynamoDB does not allow for sorted table scans, dyna
 
 Keep in mind that there are some differences between LevelDB and DynamoDB. For example, unlike LevelDB, DynamoDB does not guarantee batch write atomicity, and does not snapshot reads.
 
+Installation
+------------
+
+    npm install dynamo-down
+
 Example
 -------
 
 ```javascript
 var aws = require("aws-sdk")
-var DynamoDOWN = require("dynamodown")
+var DynamoDOWN = require("dynamo-down")
 var levelup = require("levelup")
 
 var dynamo = new aws.DynamoDB({region: "us-east-1"})
