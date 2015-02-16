@@ -50,7 +50,7 @@ API
 
 `DynamoDOWN` takes a DynamoDB instance created using the [aws-sdk][] library, and returns a leveldown-compatible constructor.
 
-### levelup("mytable/myhash", {db: dynamoDown})
+### db = levelup("mytable/myhash", {db: dynamoDown})
 
 When instantiating a levelup database, the location passed as the first argument represents the name of the DynamoDB table and the hash key within the table, separated by a `/`. The table must already exist, and have a schema with both hash and range keys.
 
