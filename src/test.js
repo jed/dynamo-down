@@ -10,6 +10,7 @@ import DynamoDOWN from "./dynamo-down"
 
 let server
 let dynamo
+let dynamoDown
 let db
 
 const httpStatusCodes = Object
@@ -76,9 +77,8 @@ const createTable = function(cb) {
   const oncreated = (err) => {
     if (err) throw err
 
-    db = levelup("test/httpStatusCode", {
-      db: DynamoDOWN(dynamo)
-    })
+    dynamoDown = DynamoDOWN(dynamo)
+    db = levelup("test/httpStatusCode", {db: dynamoDown})
 
     setTimeout(cb, 1000)
   }
@@ -123,11 +123,27 @@ const read = function(cb) {
   rs.pipe(ws)
 }
 
+const empty = function(cb) {
+  dynamoDown.destroy("test/httpStatusCode", (err) => {
+    if (err) return cb(err)
+
+    const rs = db.createReadStream()
+    const ws = concat(array => {
+      assert.deepEqual(array, [])
+      cb()
+    })
+
+    rs.pipe(ws)
+  })
+
+}
+
 async.series([
   openDatabase,
   createTable,
   write,
   read,
+  empty,
   deleteTable,
   closeDatabase
 ])

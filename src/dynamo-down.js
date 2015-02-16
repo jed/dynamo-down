@@ -19,7 +19,6 @@ const serialize = function(value) {
     case "Number"  : return {N: String(value)}
     case "Array"   : return {L: value.map(serialize)}
     case "Object"  : return {M: reduce(value)}
-
     default        : throw new Error(`Cannot serialize ${type}`)
   }
 }
@@ -42,7 +41,6 @@ const parse = function(val) {
     case "N"    : return parseFloat(value, 10)
     case "L"    : return value.map(parse)
     case "M"    : return reduce(value)
-
     default     : throw new Error(`Cannot parse ${type}.`)
   }
 }
@@ -128,7 +126,7 @@ class DynamoIterator extends AbstractIterator {
       return
     }
 
-    this.db._db.query(this._params, (err, data) => {
+    this.db._dynamo.query(this._params, (err, data) => {
       if (err) return cb(err)
 
       const {Items, LastEvaluatedKey} = data
@@ -144,12 +142,12 @@ class DynamoIterator extends AbstractIterator {
 }
 
 class DynamoDOWN extends AbstractLevelDOWN {
-  constructor(db, location) {
+  constructor(dynamo, location) {
     super(location)
 
     const [table, hash] = location.split("/")
 
-    this._db = db
+    this._dynamo = dynamo
     this._table = {name: table}
     this._schema = {
       hash: {value: hash},
@@ -188,7 +186,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
       cb()
     }
 
-    this._db.describeTable(params, ontable)
+    this._dynamo.describeTable(params, ontable)
   }
 
   _get(key, options, cb) {
@@ -197,7 +195,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
     const Key = this._toItem({key})
     const params = {TableName, Key}
 
-    this._db.getItem(params, (err, data) => {
+    this._dynamo.getItem(params, (err, data) => {
       if (err) return cb(err)
 
       if (!data.Item) return cb(new Error("NotFound"))
@@ -221,7 +219,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
     const Item = this._toItem({key, value})
     const params = {TableName, Item}
 
-    this._db.putItem(params, err => cb(err))
+    this._dynamo.putItem(params, err => cb(err))
   }
 
   _del(key, options, cb) {
@@ -229,7 +227,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
     const Key = this._toItem({key})
     const params = {TableName, Key}
 
-    this._db.deleteItem(params, err => cb(err))
+    this._dynamo.deleteItem(params, err => cb(err))
   }
 
   _iterator(options) {
@@ -262,11 +260,47 @@ class DynamoDOWN extends AbstractLevelDOWN {
 
       params.RequestItems[TableName] = reqs
 
-      this._db.batchWriteItem(params, loop)
+      this._dynamo.batchWriteItem(params, loop)
     }
 
     loop()
   }
 }
 
-export default db => location => new DynamoDOWN(db, location)
+export default function(dynamo) {
+  const ctor = function(location) {
+    return new DynamoDOWN(dynamo, location)
+  }
+
+  ctor.destroy = function(location, cb) {
+    const dynamoDown = ctor(location)
+
+    dynamoDown.open(err => {
+      if (err) return cb(err)
+
+      const iterator = dynamoDown.iterator()
+      const ops = []
+      const pull = function(err) {
+        if (err) return cb(err)
+
+        iterator.next((err, key) => {
+          if (err) return cb(err)
+
+          if (!key) return flush(cb)
+
+          ops.push({type: "del", key})
+
+          ops.length < 25 ? pull() : flush(pull)
+        })
+      }
+
+      const flush = function(cb) {
+        dynamoDown.batch(ops.splice(0), cb)
+      }
+
+      pull()
+    })
+  }
+
+  return ctor
+}

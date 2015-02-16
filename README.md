@@ -19,7 +19,7 @@ var levelup = require("levelup")
 
 var dynamo = new aws.DynamoDB({region: "us-east-1"})
 var dynamoDown = DynamoDOWN(dynamo)
-var db = levelup("mytable/myhash", {db: dynamoDown})
+var db = levelup("table-name/hash-name", {db: dynamoDown})
 
 db.put("name", "Yuri Irsenovich Kim")
 db.put("dob", "16 February 1941")
@@ -50,9 +50,13 @@ API
 
 `DynamoDOWN` takes a DynamoDB instance created using the [aws-sdk][] library, and returns a leveldown-compatible constructor.
 
-### db = levelup("mytable/myhash", {db: dynamoDown})
+### db = levelup("table-name/hash-name", {db: dynamoDown})
 
 When instantiating a levelup store, the location passed as the first argument represents the name of the DynamoDB table and the hash key within the table, separated by a `/`. The table must already exist, and have a schema with both hash and range keys.
+
+### dynamoDown.destroy("table-name/hash-name", cb)
+
+This function leaves the backing DynamoDB table in place, but deletes all items with the specified hash name.
 
 [aws-sdk]: http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/
 [abstract-leveldown]: https://github.com/rvagg/abstract-leveldown
