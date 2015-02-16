@@ -3,7 +3,7 @@ dynamo-down
 
 [![Build Status](https://travis-ci.org/jed/dynamo-down.svg?branch=master)](https://travis-ci.org/jed/dynamo-down)
 
-A DynamoDB implementation of leveldown.
+A [DynamoDB][] implementation of [leveldown][] for [io.js][].
 
 This library uses [abstract-leveldown][] to turn a subsection of a DynamoDB table into a leveldown-compatible store for use with [levelup][].
 
@@ -68,3 +68,6 @@ This function leaves the backing DynamoDB table in place, but deletes all items 
 [aws-sdk]: http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/
 [abstract-leveldown]: https://github.com/rvagg/abstract-leveldown
 [levelup]: https://github.com/rvagg/levelup
+[DynamoDB]: http://aws.amazon.com/dynamodb/
+[leveldown]: https://github.com/rvagg/node-leveldown/
+[io.js]: https://iojs.org
