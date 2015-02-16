@@ -2,13 +2,23 @@
   "name": "dynamodown",
   "version": "1.0.0",
   "description": "A leveldown API implementation on AWS DynamoDB",
-  "author": "Jed Schmidt <where@jed.is>",
+  "author": "Jed Schmidt (http://jed.is)",
   "license": "MIT",
   "main": "lib/dynamodown.js",
   "scripts": {
     "build": "babel src --out-dir lib",
     "test": "npm run build && node lib/test.js",
     "prepublish": "npm run build"
+  },
+  "keywords": [
+    "leveldb",
+    "leveldown",
+    "levelup",
+    "dynamodb"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jed/dynamodown.git"
   },
   "devDependencies": {
     "async": "^0.9.0",
