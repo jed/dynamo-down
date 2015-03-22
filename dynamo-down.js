@@ -56,15 +56,15 @@ class DynamoIterator extends AbstractIterator {
 
     if ("gt" in options || "gte" in options) {
       this._lowerBound = {
-        key: options.gt || options.gte,
-        inclusive: "gte" in options
+	key: options.gt || options.gte,
+	inclusive: "gte" in options
       }
     }
 
     if ("lt" in options || "lte" in options) {
       this._upperBound = {
-        key: options.lt || options.lte,
-        inclusive: "lte" in options
+	key: options.lt || options.lte,
+	inclusive: "lte" in options
       }
     }
 
@@ -83,25 +83,25 @@ class DynamoIterator extends AbstractIterator {
 
     if (this._lowerBound && this._upperBound) {
       this._params.KeyConditions[this.db._schema.range.name] = {
-        ComparisonOperator: "BETWEEN",
-        AttributeValueList: [
-          serialize(this._lowerBound.key),
-          serialize(this._upperBound.key)
-        ]
+	ComparisonOperator: "BETWEEN",
+	AttributeValueList: [
+	  serialize(this._lowerBound.key),
+	  serialize(this._upperBound.key)
+	]
       }
     }
 
     else if (this._lowerBound) {
       this._params.KeyConditions[this.db._schema.range.name] = {
-        ComparisonOperator: this._lowerBound.inclusive ? "GE" : "GT",
-        AttributeValueList: [serialize(this._lowerBound.key)]
+	ComparisonOperator: this._lowerBound.inclusive ? "GE" : "GT",
+	AttributeValueList: [serialize(this._lowerBound.key)]
       }
     }
 
     else if (this._upperBound) {
       this._params.KeyConditions[this.db._schema.range.name] = {
-        ComparisonOperator: this._upperBound.inclusive ? "LE" : "LT",
-        AttributeValueList: [serialize(this._upperBound.key)]
+	ComparisonOperator: this._upperBound.inclusive ? "LE" : "LT",
+	AttributeValueList: [serialize(this._upperBound.key)]
       }
     }
 
@@ -179,7 +179,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
       if (err) return cb(err)
 
       for (let {KeyType, AttributeName} of data.Table.KeySchema) {
-        this._schema[KeyType.toLowerCase()].name = AttributeName
+	this._schema[KeyType.toLowerCase()].name = AttributeName
       }
 
       cb()
@@ -236,8 +236,8 @@ class DynamoDOWN extends AbstractLevelDOWN {
 
     const ops = array.map(({type, key, value}) => (
       type === "del"
-        ? {DeleteRequest: {Key: this._toItem({key})}}
-        : {PutRequest: {Item: this._toItem({key, value})}}
+	? {DeleteRequest: {Key: this._toItem({key})}}
+	: {PutRequest: {Item: this._toItem({key, value})}}
     ))
 
     const params = {RequestItems: {}}
@@ -248,7 +248,7 @@ class DynamoDOWN extends AbstractLevelDOWN {
       const reqs = []
 
       if (data && data.UnprocessedItems && data.UnprocessedItems[TableName]) {
-        reqs.push(...data.UnprocessedItems[TableName])
+	reqs.push(...data.UnprocessedItems[TableName])
       }
 
       reqs.push(...ops.splice(0, 25 - reqs.length))
@@ -278,21 +278,21 @@ export default function(dynamo) {
       const iterator = dynamoDown.iterator()
       const ops = []
       const pull = function(err) {
-        if (err) return cb(err)
+	if (err) return cb(err)
 
-        iterator.next((err, key) => {
-          if (err) return cb(err)
+	iterator.next((err, key) => {
+	  if (err) return cb(err)
 
-          if (!key) return flush(cb)
+	  if (!key) return flush(cb)
 
-          ops.push({type: "del", key})
+	  ops.push({type: "del", key})
 
-          ops.length < 25 ? pull() : flush(pull)
-        })
+	  ops.length < 25 ? pull() : flush(pull)
+	})
       }
 
       const flush = function(cb) {
-        dynamoDown.batch(ops.splice(0), cb)
+	dynamoDown.batch(ops.splice(0), cb)
       }
 
       pull()

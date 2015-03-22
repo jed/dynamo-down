@@ -50,22 +50,22 @@ const createTable = function(cb) {
     TableName: "test",
     KeySchema: [
       {
-        "AttributeName": "type",
-        "KeyType": "HASH"
+	"AttributeName": "type",
+	"KeyType": "HASH"
       },
       {
-        "AttributeName": "key",
-        "KeyType": "RANGE"
+	"AttributeName": "key",
+	"KeyType": "RANGE"
       },
     ],
     AttributeDefinitions: [
       {
-        AttributeName: "type",
-        AttributeType: "S"
+	AttributeName: "type",
+	AttributeType: "S"
       },
       {
-        AttributeName: "key",
-        AttributeType: "S"
+	AttributeName: "key",
+	AttributeType: "S"
       },
     ],
     ProvisionedThroughput: {

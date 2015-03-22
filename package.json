@@ -4,10 +4,9 @@
   "description": "A leveldown API implementation on AWS DynamoDB",
   "author": "Jed Schmidt (http://jed.is)",
   "license": "MIT",
-  "main": "lib/dynamo-down.js",
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "test": "npm run build && node lib/test.js",
+    "build": "babel dynamo-down.js > index.js",
+    "test": "babel-node test.js",
     "prepublish": "npm run build"
   },
   "keywords": [
